@@ -2,7 +2,7 @@
 <html lang="zxx">
 
 
-<!-- Mirrored from risingtheme.com/html/demo-suruchi-v1/suruchi/product-video.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Sep 2024 14:33:48 GMT -->
+
 <head>
   <meta charset="utf-8">
   <title>Suruchi - Product Details Video</title>
