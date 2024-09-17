@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,23 @@ Route::view('/shop-grid-list', 'shop-grid-list')->name('shop.grid.list');
 Route::view('/shop-list', 'shop-list')->name('shop.list');
 Route::view('/shop-left-sidebar', 'product-left-sidebar')->name('shop.left.sidebar');
 
+
+
+// Admin Login Routes
+Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('admin/login', [AdminAuthController::class, 'login']);
+
+// Admin Forgot Password Routes
+Route::get('admin/forgot-password', [AdminAuthController::class, 'showForgotPasswordForm'])->name('admin.forgot.password');
+Route::post('admin/forgot-password', [AdminAuthController::class, 'sendResetLink']);
+Route::get('admin/reset-password/{token}', [AdminAuthController::class, 'showResetPasswordForm'])->name('admin.reset.password');
+Route::post('admin/reset-password', [AdminAuthController::class, 'resetPassword']);
+
+// Admin Dashboard Route
+Route::middleware(['auth.admin'])->group(function () {
+    Route::get('admin/dashboard', [AdminAuthController::class, 'dashboard'])->name('admin.dashboard');
+});
+
 // Miscellaneous routes
 Route::view('/wishlist', 'wishlist')->name('wishlist');
 
@@ -69,3 +87,11 @@ require __DIR__ . '/auth.php';
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('admin/reset-password/{token}', [AdminAuthController::class, 'showResetPasswordForm'])->name('admin.reset.password');
+
+
+// Route to show reset password form
+Route::get('/admin/reset-password/{token}', [AdminAuthController::class, 'showResetPasswordForm'])->name('admin.reset.password.form');
+
+// Route to handle password reset
+Route::post('/admin/reset-password', [AdminAuthController::class, 'resetPassword'])->name('admin.reset.password');
