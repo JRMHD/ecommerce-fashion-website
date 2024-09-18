@@ -36,7 +36,19 @@
             <div class="border-4 border-dashed border-gray-200 rounded-lg h-96 p-4">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">Welcome to the admin dashboard!</h2>
                 <p class="text-gray-600">Here you can manage products, view orders, and update site content.</p>
-                <!-- Add more dashboard content here -->
+
+                <!-- Management Buttons -->
+                <div class="mt-6">
+                    <a href="{{ route('admin.products.index') }}"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        View Products
+                    </a>
+                    <a href="{{ route('admin.products.create') }}"
+                        class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Add New Product
+                    </a>
+                </div>
+                <!-- End Management Buttons -->
             </div>
         </div>
     </main>

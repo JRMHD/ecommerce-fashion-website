@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,3 +103,26 @@ Route::get('/my-account', function () {
     return view('my-account');
 })->middleware('auth')->name('my-account');
 
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+
+Route::middleware(['auth', 'admin'])->group(function () {});
+
+
+
+
+// routes/web.php
+Route::prefix('admin')->group(function () {
+    Route::get('products', [AdminProductController::class, 'index'])->name('admin.products.index');
+    Route::get('products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+        Route::resource('products', AdminProductController::class);
+    });
+    // Add more routes as needed
+});
+Route::get('/product/{product}', [ShopController::class, 'show'])->name('products.show');
