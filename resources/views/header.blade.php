@@ -29,12 +29,6 @@
                                 <span>English (UK)</span>
                             </a>
                         </li>
-                        <li class="language__currency--list">
-                            <a class="account__currency--link text-white" href="#">
-                                <img src="assets/img/icon/usd-icon.png" alt="currency" />
-                                <span>$ USD</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -66,8 +60,6 @@
                                 <option selected value="1">All Categories</option>
                                 <option value="2">Accessories</option>
                                 <option value="3">Accessories & More</option>
-                                <option value="4">Camera & Video</option>
-                                <option value="5">Butters & Eggs</option>
                             </select>
                         </div>
                         <div class="header__search--box">
@@ -91,22 +83,124 @@
                 </div>
                 <div class="header__account header__sticky--none">
                     <ul class="d-flex">
-                        <li class="header__account--items">
-                            <a class="header__account--btn" href="my-account">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
-                                    viewBox="0 0 512 512">
-                                    <path
-                                        d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
-                                        fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="32" />
-                                    <path
-                                        d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
-                                        fill="none" stroke="currentColor" stroke-miterlimit="10"
-                                        stroke-width="32" />
-                                </svg>
-                                <span class="header__account--btn__text">My Account</span>
-                            </a>
+                        <li class="header__account--items header__account2--items">
+                            @if (Auth::check())
+                                <!-- User is logged in -->
+                                <a class="header__account--btn account-logged-in" href="{{ route('my-account') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                        viewBox="0 0 512 512">
+                                        <path
+                                            d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                            fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="32" />
+                                        <path
+                                            d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                            fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                            stroke-width="32" />
+                                    </svg>
+                                    <span class="visually-hidden">My Account</span>
+                                    <span class="account-text">My Account</span>
+                                </a>
+                            @else
+                                <!-- User is not logged in -->
+                                <div class="account-links">
+                                    <a class="header__account--btn account-login" href="{{ route('login') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                                fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32" />
+                                            <path
+                                                d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                                fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                                stroke-width="32" />
+                                        </svg>
+                                        <span class="visually-hidden">Login</span>
+                                        <span class="account-text">Login</span>
+                                    </a>
+                                    <a class="header__account--btn account-create" href="{{ route('register') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                                fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32" />
+                                            <path
+                                                d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                                fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                                stroke-width="32" />
+                                        </svg>
+                                        <span class="visually-hidden">Create Account</span>
+                                        <span class="account-text">Create Account</span>
+                                    </a>
+                                </div>
+                            @endif
                         </li>
+                        <style>
+                            .header__account--btn {
+                                display: inline-flex;
+                                align-items: center;
+                                text-decoration: none;
+                                color: #333;
+                                /* Text color */
+                                padding: 8px 12px;
+                                font-weight: bold;
+                                border-radius: 5px;
+                                transition: all 0.3s ease;
+                            }
+
+                            .account-text {
+                                margin-left: 8px;
+                                /* Add space between icon and text */
+                            }
+
+                            .header__account--btn svg {
+                                fill: currentColor;
+                                transition: transform 0.3s ease;
+                            }
+
+                            .header__account--btn:hover {
+                                color: #007bff;
+                                /* Change text color on hover */
+                            }
+
+                            .header__account--btn:hover svg {
+                                transform: scale(1.1);
+                                /* Enlarge icon slightly on hover */
+                            }
+
+                            .account-logged-in {
+                                background-color: #f8f9fa;
+                                /* Background for logged-in user */
+                                border: 1px solid #ddd;
+                            }
+
+                            .account-login,
+                            .account-create {
+                                background-color: #fff;
+                                /* Separate Login/Create Account links */
+                                border: 1px solid #ddd;
+                                margin-right: 10px;
+                            }
+
+                            .account-create {
+                                margin-right: 0;
+                                /* Remove margin for the last element */
+                            }
+
+                            .account-links {
+                                display: flex;
+                                gap: 10px;
+                            }
+
+                            .account-login:hover,
+                            .account-create:hover {
+                                background-color: #e9ecef;
+                                /* Slight background change on hover */
+                            }
+                        </style>
+
                         <li class="header__account--items d-none d-lg-block">
                             <a class="header__account--btn" href="wishlist">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28.51" height="23.443"
@@ -163,89 +257,6 @@
                                 <a class="header__menu--link" href="about">About US</a>
                             </li>
 
-                            <!-- Pages Menu Item with Sub-menu -->
-                            <li class="header__menu--items style2">
-                                <!-- <a class="header__menu--link" href="#">Pages
-                                        <svg class="menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12"
-                                            height="7.41" viewBox="0 0 12 7.41">
-                                            <path d="M16.59,8.59,12,13.17,7.41,8.59,6,10l6,6,6-6Z"
-                                                transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7" />
-                                        </svg>
-                                    </a> -->
-                                <ul class="header__sub--menu">
-                                    <!-- Shop Sub-menu -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop" class="header__sub--menu__link">Shop Left Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-right-sidebar" class="header__sub--menu__link">Shop
-                                            Right
-                                            Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-grid" class="header__sub--menu__link">Shop Grid</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-grid-list" class="header__sub--menu__link">Shop Grid
-                                            List</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-list" class="header__sub--menu__link">Shop List</a>
-                                    </li>
-
-                                    <!-- Product Sub-menu -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-details" class="header__sub--menu__link">Product
-                                            Details</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-video" class="header__sub--menu__link">Video
-                                            Product</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-left-sidebar" class="header__sub--menu__link">Product
-                                            Left Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-gallery" class="header__sub--menu__link">Product
-                                            Gallery</a>
-                                    </li>
-
-                                    <!-- Miscellaneous Pages -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="my-account" class="header__sub--menu__link">My Account</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="404" class="header__sub--menu__link">404 Page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="login" class="header__sub--menu__link">Login Page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="faq" class="header__sub--menu__link">Faq Page</a>
-                                    </li>
-
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout" class="header__sub--menu__link">Checkout Page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-2" class="header__sub--menu__link">Checkout Style
-                                            2</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-3" class="header__sub--menu__link">Checkout Style
-                                            3</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-4" class="header__sub--menu__link">Checkout Style
-                                            4</a>
-                                    </li>
-
-                                    <li class="header__sub--menu__items">
-                                        <a href="wishlist" class="header__sub--menu__link">Wishlist Page</a>
-                                    </li>
-                                </ul>
-                            </li>
 
                             <!-- Contact Menu Item -->
                             <li class="header__menu--items style2">
@@ -272,21 +283,60 @@
                             </a>
                         </li>
                         <li class="header__account--items header__account2--items">
-                            <a class="header__account--btn" href="my-account">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
-                                    viewBox="0 0 512 512">
-                                    <path
-                                        d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
-                                        fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="32" />
-                                    <path
-                                        d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
-                                        fill="none" stroke="currentColor" stroke-miterlimit="10"
-                                        stroke-width="32" />
-                                </svg>
-                                <span class="visually-hidden">My Account</span>
-                            </a>
+                            @if (Auth::check())
+                                <!-- User is logged in -->
+                                <a class="header__account--btn account-logged-in" href="{{ route('my-account') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                        viewBox="0 0 512 512">
+                                        <path
+                                            d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                            fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="32" />
+                                        <path
+                                            d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                            fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                            stroke-width="32" />
+                                    </svg>
+                                    <span class="visually-hidden">My Account</span>
+                                    <span class="account-text">My Account</span>
+                                </a>
+                            @else
+                                <!-- User is not logged in -->
+                                <div class="account-links">
+                                    <a class="header__account--btn account-login" href="{{ route('login') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                                fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32" />
+                                            <path
+                                                d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                                fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                                stroke-width="32" />
+                                        </svg>
+                                        <span class="visually-hidden">Login</span>
+                                        <span class="account-text">Login</span>
+                                    </a>
+                                    <a class="header__account--btn account-create" href="{{ route('register') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
+                                                fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32" />
+                                            <path
+                                                d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
+                                                fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                                stroke-width="32" />
+                                        </svg>
+                                        <span class="visually-hidden">Create Account</span>
+                                        <span class="account-text">Create Account</span>
+                                    </a>
+                                </div>
+                            @endif
                         </li>
+
                         <li class="header__account--items header__account2--items d-none d-lg-block">
                             <a class="header__account--btn" href="wishlist">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28.51" height="23.443"
@@ -350,93 +400,6 @@
                                 <a class="header__menu--link" href="contact">Contact</a>
                             </li>
                             <li class="header__menu--items">
-                                <!-- <a class="header__menu--link" href="#">Pages
-                                        <svg class="menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12"
-                                            height="7.41" viewBox="0 0 12 7.41">
-                                            <path d="M16.59,8.59,12,13.17,7.41,8.59,6,10l6,6,6-6Z"
-                                                transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7" />
-                                        </svg>
-                                    </a> -->
-                                <ul class="header__sub--menu">
-                                    <!-- Dashboard Dropdown Items -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="/" class="header__sub--menu__link">Dashboard</a>
-                                    </li>
-
-
-                                    <!-- Shop Dropdown Items -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop" class="header__sub--menu__link">Shop Left Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-right-sidebar" class="header__sub--menu__link">Shop
-                                            Right
-                                            Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-grid" class="header__sub--menu__link">Shop Grid</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-grid-list" class="header__sub--menu__link">Shop Grid
-                                            List</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="shop-list" class="header__sub--menu__link">Shop List</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-details" class="header__sub--menu__link">Product
-                                            Details</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-video" class="header__sub--menu__link">Video
-                                            Product</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-left-sidebar" class="header__sub--menu__link">Product
-                                            Left Sidebar</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="product-gallery" class="header__sub--menu__link">Product
-                                            Gallery</a>
-                                    </li>
-
-
-                                    <!-- Other Pages -->
-                                    <li class="header__sub--menu__items">
-                                        <a href="about" class="header__sub--menu__link">About Us</a>
-                                    </li>
-
-                                    <li class="header__sub--menu__items">
-                                        <a href="cart" class="header__sub--menu__link">Cart Page</a>
-                                    </li>
-
-                                    <li class="header__sub--menu__items">
-                                        <a href="wishlist" class="header__sub--menu__link">Wishlist Page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="login" class="header__sub--menu__link">Login Page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="404" class="header__sub--menu__link">Error Page</a>
-                                    </li>
-
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout" class="header__sub--menu__link">Checkout page</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-2" class="header__sub--menu__link">Checkout Style
-                                            2</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-3" class="header__sub--menu__link">Checkout Style
-                                            3</a>
-                                    </li>
-                                    <li class="header__sub--menu__items">
-                                        <a href="checkout-4" class="header__sub--menu__link">Checkout Style
-                                            4</a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -473,40 +436,6 @@
                         <a class="offcanvas__menu_item" href="contact">Contact</a>
                     </li>
                 </ul>
-                <div class="offcanvas__account--items">
-                    <a class="offcanvas__account--items__btn d-flex align-items-center" href="login">
-                        <span class="offcanvas__account--items__icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20.51" height="19.443"
-                                viewBox="0 0 512 512">
-                                <path
-                                    d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z"
-                                    fill="none" stroke="currentColor" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="32" />
-                                <path
-                                    d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z"
-                                    fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
-                            </svg>
-                        </span>
-                        <span class="offcanvas__account--items__label">Login / Register</span>
-                    </a>
-                </div>
-                <div class="language__currency">
-                    <ul class="d-flex align-items-center">
-                        <li class="language__currency--list">
-                            <a class="offcanvas__language--switcher" href="#">
-                                <img class="language__switcher--icon__img" src="assets/img/icon/language-icon.png"
-                                    alt="currency" />
-                                <span>English (UK)</span>
-                            </a>
-                        </li>
-                        <li class="language__currency--list">
-                            <a class="offcanvas__account--currency__menu" href="#">
-                                <img src="assets/img/icon/usd-icon.png" alt="currency" />
-                                <span>$ US Dollar</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </nav>
         </div>
     </div>
@@ -635,37 +564,7 @@
                     </div>
                 </div>
             </div>
-            <div class="minicart__product--items d-flex">
-                <div class="minicart__thumb">
-                    <a href="product-details"><img src="assets/img/product/product2.png" alt="prduct-img" /></a>
-                </div>
-                <div class="minicart__text">
-                    <h3 class="minicart__subtitle h4">
-                        <a href="product-details">Boxy Denim Jacket</a>
-                    </h3>
-                    <span class="color__variant"><b>Color:</b> Green</span>
-                    <div class="minicart__price">
-                        <span class="current__price">$115.00</span>
-                        <span class="old__price">$130.00</span>
-                    </div>
-                    <div class="minicart__text--footer d-flex align-items-center">
-                        <div class="quantity__box minicart__quantity">
-                            <button type="button" class="quantity__value decrease" aria-label="quantity value"
-                                value="Decrease Value">
-                                -
-                            </button>
-                            <label>
-                                <input type="number" class="quantity__number" value="1" data-counter />
-                            </label>
-                            <button type="button" class="quantity__value increase" aria-label="quantity value"
-                                value="Increase Value">
-                                +
-                            </button>
-                        </div>
-                        <button class="minicart__product--remove">Remove</button>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <div class="minicart__amount">
             <div class="minicart__amount_list d-flex justify-content-between">

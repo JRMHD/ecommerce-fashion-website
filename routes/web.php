@@ -45,8 +45,8 @@ Route::view('/dashboard', 'dashboard')->name('dashboard');
 Route::view('/faq', 'faq')->name('faq');
 Route::view('/footer', 'footer')->name('footer');
 Route::view('/login', 'login')->name('login');
-Route::view('/my-account', 'my-account')->name('my.account');
-Route::view('/my-account-2', 'my-account-2')->name('my.account.2');
+// Route::view('/my-account', 'my-account')->name('my.account');
+// Route::view('/my-account-2', 'my-account-2')->name('my.account.2');
 Route::view('/privacy-policy', 'privacy-policy')->name('privacy.policy');
 
 // Product-related routes
@@ -95,3 +95,8 @@ Route::get('/admin/reset-password/{token}', [AdminAuthController::class, 'showRe
 
 // Route to handle password reset
 Route::post('/admin/reset-password', [AdminAuthController::class, 'resetPassword'])->name('admin.reset.password');
+
+Route::get('/my-account', function () {
+    return view('my-account');
+})->middleware('auth')->name('my-account');
+
