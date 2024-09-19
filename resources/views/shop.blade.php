@@ -366,6 +366,7 @@
 
     </main>
     {{-- footer start --}}
+    @include('whatsapp')
     @include('footer')
     <!-- End footer section -->
 

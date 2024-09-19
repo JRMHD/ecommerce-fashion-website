@@ -411,10 +411,6 @@
                             <li class="header__menu--items">
                                 <a class="header__menu--link" href="about">About Us</a>
                             </li>
-
-                            <li class="header__menu--items d-none d-xl-block">
-                                <a class="header__menu--link" href="shop">Categories</a>
-                            </li>
                             <li class="header__menu--items">
                                 <a class="header__menu--link" href="contact">Contact</a>
                             </li>

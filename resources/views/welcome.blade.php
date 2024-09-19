@@ -452,7 +452,7 @@
         </section>
         <!-- End banner section -->
 
-
+        @include('whatsapp')
 
         @include('footer')
 

@@ -236,7 +236,7 @@
         </div>
 
         <!-- End counterup banner section -->
-
+        @include('whatsapp')
         @include('footer')
 
         <!-- End footer section -->

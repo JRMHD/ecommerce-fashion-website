@@ -403,6 +403,7 @@
     </main>
 
     <!-- Start footer section -->
+    @include('whatsapp')
     @include('footer')
     <!-- End footer section -->
     <!-- Scroll top bar -->

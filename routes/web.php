@@ -10,6 +10,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,3 +156,9 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+
+
+Route::middleware('auth')->group(function () {
+    Route::resource('addresses', AddressController::class)->except(['show']);
+    
+});
