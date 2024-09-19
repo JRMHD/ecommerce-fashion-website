@@ -118,11 +118,23 @@
         <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
             <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 24px; color: black;">Shop with us Today</h1>
 
+            <!-- Display Success and Error Messages -->
+            @if (session('success'))
+                <div
+                    style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                    {{ session('success') }}
+                </div>
+            @elseif (session('error'))
+                <div
+                    style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
                 @foreach ($products as $product)
                     <div
                         style="background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
-
                         @if ($product->images->isNotEmpty())
                             <img src="{{ Storage::url($product->images->first()->url) }}" alt="{{ $product->name }}"
                                 style="width: 100%; height: 280px; object-fit: cover;">
@@ -143,25 +155,33 @@
 
                             <div
                                 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <a href="#"
-                                    style="display: flex; align-items: center; background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background-color 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        style="height: 20px; width: 20px; margin-right: 8px;" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 3h2l.4 2M7 13h10l1.4-8H5.2L7 13zm0 0l1 5h8l1-5M5 13H4a1 1 0 100 2h1m14-2h1a1 1 0 100 2h-1" />
-                                    </svg>
-                                    Add to Cart
-                                </a>
+                                <!-- Add to Cart Form -->
+                                <form action="{{ route('cart.add', $product) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        style="display: flex; align-items: center; background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background-color 0.3s;">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            style="height: 20px; width: 20px; margin-right: 8px;" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 3h2l.4 2M7 13h10l1.4-8H5.2L7 13zm0 0l1 5h8l1-5M5 13H4a1 1 0 100 2h1m14-2h1a1 1 0 100 2h-1" />
+                                        </svg>
+                                        Add to Cart
+                                    </button>
+                                </form>
 
-                                <a href="#"
-                                    style="color: #EE2761; text-decoration: none; transition: color 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" style="height: 24px; width: 24px;"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4.318 6.318a4.5 4.5 0 016.364 0l.318.318.318-.318a4.5 4.5 0 016.364 6.364l-6.682 6.682a1 1 0 01-1.414 0L4.318 12.682a4.5 4.5 0 010-6.364z" />
-                                    </svg>
-                                </a>
+                                <!-- Add to Wishlist Form -->
+                                <form action="{{ route('wishlist.add', $product) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        style="background-color: transparent; border: none; color: #EE2761; cursor: pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style="height: 24px; width: 24px;"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4.318 6.318a4.5 4.5 0 016.364 0l.318.318.318-.318a4.5 4.5 0 016.364 6.364l-6.682 6.682a1 1 0 01-1.414 0L4.318 12.682a4.5 4.5 0 010-6.364z" />
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
 
                             <a href="{{ route('shop.show', $product) }}"
@@ -211,6 +231,8 @@
             </div>
         </div>
         <!-- End shop section -->
+
+
         <!-- Start shipping section -->
         <section class="shipping__section2 shipping__style3 section--padding pt-0">
             <div class="container">

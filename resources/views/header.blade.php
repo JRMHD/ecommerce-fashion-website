@@ -202,7 +202,8 @@
                         </style>
 
                         <li class="header__account--items d-none d-lg-block">
-                            <a class="header__account--btn" href="wishlist">
+                            <a class="header__account--btn" href="{{ url('wishlist') }}">
+                                <!-- Linking to wishlist route -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28.51" height="23.443"
                                     viewBox="0 0 512 512">
                                     <path
@@ -211,9 +212,11 @@
                                         stroke-linejoin="round" stroke-width="32"></path>
                                 </svg>
                                 <span class="header__account--btn__text"> Wish List</span>
-                                <span class="items__count wishlist">02</span>
+                                <!-- Wishlist count -->
+                                <span class="items__count wishlist">{{ $wishlistCount ?? 0 }}</span>
                             </a>
                         </li>
+
                         <li class="header__account--items">
                             <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
                                 data-offcanvas>

@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,3 +128,22 @@ Route::prefix('admin')->group(function () {
     // Add more routes as needed
 });
 Route::get('/product/{product}', [ShopController::class, 'show'])->name('products.show');
+
+Route::middleware('auth')->group(function () {
+    // Cart routes
+    Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+
+
+    // Wishlist routes
+    Route::get('/wishlist', [WishlistController::class, 'showWishlist'])->name('wishlist.show');
+    Route::post('/wishlist/add/{product}', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+    Route::post('/wishlist/remove/{product}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    Route::post('/wishlist/add-to-cart/{product}', [WishlistController::class, 'addWishlistItemToCart'])->name('wishlist.addToCart');
+});
