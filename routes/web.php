@@ -138,6 +138,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::delete('/cart/remove/{cartItemId}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
+
 
 
 
@@ -146,4 +149,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/wishlist/add/{product}', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
     Route::post('/wishlist/remove/{product}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
     Route::post('/wishlist/add-to-cart/{product}', [WishlistController::class, 'addWishlistItemToCart'])->name('wishlist.addToCart');
+    Route::get('/wishlist/count', [WishlistController::class, 'countWishlistItems']);
+    Route::post('/wishlist/add-all-to-cart', [WishlistController::class, 'addAllToCart'])->name('wishlist.addAllToCart');
 });
+
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');

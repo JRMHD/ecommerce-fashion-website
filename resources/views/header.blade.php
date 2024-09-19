@@ -54,17 +54,32 @@
                     </h1>
                 </div>
                 <div class="header__search--widget header__sticky--none d-none d-lg-block">
-                    <form class="d-flex header__search--form" action="#">
+                    <form class="d-flex header__search--form" action="{{ route('shop.index') }}" method="GET">
                         <div class="header__select--categories select">
-                            <select class="header__select--inner">
-                                <option selected value="1">All Categories</option>
-                                <option value="2">Accessories</option>
-                                <option value="3">Accessories & More</option>
+                            <select name="category" class="header__select--inner">
+                                <option value="">Select a category</option>
+                                <option value="traditional_wears">Traditional Wears</option>
+                                <option value="igbo_designs">Igbo designs</option>
+                                <option value="yoruba_designs">Yoruba designs</option>
+                                <option value="hausa_designs">Hausa designs</option>
+                                <option value="edo_designs">Edo designs</option>
+                                <option value="odugwu_2pcs">Odugwu 2pcs Wears</option>
+                                <option value="men_bespoke">Men bespoke designs</option>
+                                <option value="women_bespoke">Women bespoke designs</option>
+                                <option value="celebrities">Celebrities Wears</option>
+                                <option value="boss_wears">The Boss Wears (C.E.O and MD's)</option>
+                                <option value="oga_luxury">OGA Luxury</option>
+                                <option value="wedding">Wedding Wears</option>
+                                <option value="queens">Luxury Queens Wears</option>
+                                <option value="anniversaries">Anniversaries Wears</option>
+                                <option value="special_occasions">Special occasions Wears</option>
+                                <option value="shoes">Hand made shoes</option>
                             </select>
                         </div>
                         <div class="header__search--box">
                             <label>
-                                <input class="header__search--input" placeholder="Keyword here..." type="text" />
+                                <input name="query" class="header__search--input" placeholder="Keyword here..."
+                                    type="text" />
                             </label>
                             <button class="header__search--button bg__secondary text-white" type="submit"
                                 aria-label="search button">
@@ -74,13 +89,13 @@
                                         fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32">
                                     </path>
                                     <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448">
-                                    </path>
+                                        stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path>
                                 </svg>
                             </button>
                         </div>
                     </form>
                 </div>
+
                 <div class="header__account header__sticky--none">
                     <ul class="d-flex">
                         <li class="header__account--items header__account2--items">
@@ -213,13 +228,13 @@
                                 </svg>
                                 <span class="header__account--btn__text"> Wish List</span>
                                 <!-- Wishlist count -->
-                                <span class="items__count wishlist">{{ $wishlistCount ?? 0 }}</span>
+                                <span class="items__count wishlist">{{ $wishlistCount }}</span>
+
                             </a>
                         </li>
 
                         <li class="header__account--items">
-                            <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
-                                data-offcanvas>
+                            <a class="header__account--btn minicart__open--btn" href="{{ url('cart') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                     viewBox="0 0 14.706 13.534">
                                     <g transform="translate(0 0)">
@@ -236,10 +251,11 @@
                                         </g>
                                     </g>
                                 </svg>
-                                <span class="header__account--btn__text"> My cart</span>
-                                <span class="items__count">02</span>
+                                <span class="header__account--btn__text">My cart</span>
+                                <span class="items__count">{{ $cartCount }} items</span>
                             </a>
                         </li>
+
                     </ul>
                 </div>
                 <div class="header__menu d-none header__sticky--block d-lg-block">
@@ -349,11 +365,11 @@
                                         fill="none" stroke="currentColor" stroke-linecap="round"
                                         stroke-linejoin="round" stroke-width="32"></path>
                                 </svg>
-                                <span class="items__count wishlist style2">02</span>
+                                <span class="items__count wishlist">{{ $wishlistCount }}</span>
                             </a>
                         </li>
                         <li class="header__account--items header__account2--items">
-                            <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
+                            <a class="header__account--btn minicart__open--btn"href="{{ url('cart') }}"
                                 data-offcanvas>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                     viewBox="0 0 14.706 13.534">
@@ -371,7 +387,7 @@
                                         </g>
                                     </g>
                                 </svg>
-                                <span class="items__count style2">02</span>
+                                <span class="items__count">{{ $cartCount }} items</span>
                             </a>
                         </li>
                     </ul>
@@ -488,7 +504,7 @@
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list">
-                <a class="offcanvas__stikcy--toolbar__btn minicart__open--btn" href="javascript:void(0)"
+                <a class="offcanvas__stikcy--toolbar__btn minicart__open--btn"href="{{ url('cart') }}"
                     data-offcanvas>
                     <span class="offcanvas__stikcy--toolbar__icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18.51" height="15.443"
@@ -499,7 +515,7 @@
                         </svg>
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">Cart</span>
-                    <span class="items__count">3</span>
+                    <span class="items__count">{{ $cartCount }} items</span>
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list">
@@ -513,91 +529,23 @@
                         </svg>
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">Wishlist</span>
-                    <span class="items__count">3</span>
+                    <span class="items__count wishlist">{{ $wishlistCount }}</span>
                 </a>
             </li>
         </ul>
     </div>
     <!-- End Offcanvas stikcy toolbar -->
 
-    <!-- Start offCanvas minicart -->
-    <div class="offCanvas__minicart">
-        <div class="minicart__header">
-            <div class="minicart__header--top d-flex justify-content-between align-items-center">
-                <h2 class="minicart__title h3">Shopping Cart</h2>
-                <button class="minicart__close--btn" aria-label="minicart close button" data-offcanvas>
-                    <svg class="minicart__close--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="currentColor" stroke="currentColor" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368" />
-                    </svg>
-                </button>
-            </div>
-            <p class="minicart__header--desc">
-                Clothing and fashion products are limited
-            </p>
-        </div>
-        <div class="minicart__product">
-            <div class="minicart__product--items d-flex">
-                <div class="minicart__thumb">
-                    <a href="product-details"><img src="assets/img/product/product1.png" alt="prduct-img" /></a>
-                </div>
-                <div class="minicart__text">
-                    <h3 class="minicart__subtitle h4">
-                        <a href="product-details">Oversize Cotton Dress</a>
-                    </h3>
-                    <span class="color__variant"><b>Color:</b> Beige</span>
-                    <div class="minicart__price">
-                        <span class="current__price">$125.00</span>
-                        <span class="old__price">$140.00</span>
-                    </div>
-                    <div class="minicart__text--footer d-flex align-items-center">
-                        <div class="quantity__box minicart__quantity">
-                            <button type="button" class="quantity__value decrease" aria-label="quantity value"
-                                value="Decrease Value">
-                                -
-                            </button>
-                            <label>
-                                <input type="number" class="quantity__number" value="1" data-counter />
-                            </label>
-                            <button type="button" class="quantity__value increase" value="Increase Value">
-                                +
-                            </button>
-                        </div>
-                        <button class="minicart__product--remove">Remove</button>
-                    </div>
-                </div>
-            </div>
 
-        </div>
-        <div class="minicart__amount">
-            <div class="minicart__amount_list d-flex justify-content-between">
-                <span>Sub Total:</span>
-                <span><b>$240.00</b></span>
-            </div>
-            <div class="minicart__amount_list d-flex justify-content-between">
-                <span>Total:</span>
-                <span><b>$240.00</b></span>
-            </div>
-        </div>
-        <div class="minicart__conditions text-center">
-            <input class="minicart__conditions--input" id="accept" type="checkbox" />
-            <label class="minicart__conditions--label" for="accept">I agree with the
-                <a class="minicart__conditions--link" href="privacy-policy">Privacy and Policy</a></label>
-        </div>
-        <div class="minicart__button d-flex justify-content-center">
-            <a class="primary__btn minicart__button--link" href="cart">View cart</a>
-            <a class="primary__btn minicart__button--link" href="checkout">Checkout</a>
-        </div>
-    </div>
-    <!-- End offCanvas minicart -->
 
-    <!-- Start serch box area -->
+    <!-- Start search box area -->
     <div class="predictive__search--box">
         <div class="predictive__search--box__inner">
             <h2 class="predictive__search--title">Search Products</h2>
-            <form class="predictive__search--form" action="#">
+            <form class="predictive__search--form" action="{{ route('shop.index') }}" method="GET">
                 <label>
-                    <input class="predictive__search--input" placeholder="Search Here" type="text" />
+                    <input class="predictive__search--input" name="query" placeholder="Search Here" type="text"
+                        value="{{ request()->input('query') }}" />
                 </label>
                 <button class="predictive__search--button" aria-label="search button" type="submit">
                     <svg class="header__search--button__svg" xmlns="http://www.w3.org/2000/svg" width="30.51"
@@ -618,6 +566,8 @@
             </svg>
         </button>
     </div>
+    <!-- End search box area -->
+
     <!-- End serch box area -->
 </header>
 <!-- End header area -->

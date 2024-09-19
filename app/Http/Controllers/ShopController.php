@@ -7,9 +7,39 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('images')->latest()->paginate(16);
+        // Get search query, category, and price filters from request
+        $query = $request->input('query');
+        $category = $request->input('category');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+
+        // Start query builder
+        $productsQuery = Product::with('images')->latest();
+
+        // Filter by category if provided
+        if ($category) {
+            $productsQuery->where('category', $category);
+        }
+
+        // Filter by search keywords if provided
+        if ($query) {
+            $productsQuery->where('name', 'like', '%' . $query . '%')
+                ->orWhere('description', 'like', '%' . $query . '%');
+        }
+
+        // Filter by price range if provided
+        if ($minPrice) {
+            $productsQuery->where('price', '>=', $minPrice);
+        }
+        if ($maxPrice) {
+            $productsQuery->where('price', '<=', $maxPrice);
+        }
+
+        // Paginate the results
+        $products = $productsQuery->paginate(16);
+
         return view('shop', compact('products'));
     }
 
@@ -24,4 +54,6 @@ class ShopController extends Controller
 
         return view('product-details', compact('product', 'otherProducts'));
     }
+
+    
 }

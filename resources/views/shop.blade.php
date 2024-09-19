@@ -131,106 +131,187 @@
                 </div>
             @endif
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
-                @foreach ($products as $product)
-                    <div
-                        style="background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
-                        @if ($product->images->isNotEmpty())
-                            <img src="{{ Storage::url($product->images->first()->url) }}" alt="{{ $product->name }}"
-                                style="width: 100%; height: 280px; object-fit: cover;">
-                        @else
-                            <div
-                                style="width: 100%; height: 280px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                No Image
-                            </div>
-                        @endif
+            <!-- Filters -->
+            <div style="margin-bottom: 24px;">
+                <form action="{{ route('shop.index') }}" method="GET"
+                    style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <!-- Search Input -->
+                    <input name="query" type="text" placeholder="Search..."
+                        value="{{ request()->input('query') }}"
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; flex: 1 1 200px; min-width: 150px;">
 
-                        <div style="padding: 16px;">
-                            <h2 style="font-size: 1.75rem; font-weight: bold; margin-bottom: 8px; color: black;">
-                                {{ $product->name }}</h2>
-                            <p style="color: #888888; margin-bottom: 8px;">{{ Str::limit($product->description, 100) }}
-                            </p>
-                            <p style="font-size: 1.25rem; font-weight: bold; color: #EE2761; margin-bottom: 16px;">KES
-                                {{ number_format($product->price, 2) }}</p>
+                    <!-- Category Filter -->
+                    <select name="category"
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; flex: 1 1 200px; min-width: 150px;">
+                        <option value="">Select a category</option>
+                        <option value="traditional_wears"
+                            {{ request()->input('category') == 'traditional_wears' ? 'selected' : '' }}>Traditional
+                            Wears</option>
+                        <option value="igbo_designs"
+                            {{ request()->input('category') == 'igbo_designs' ? 'selected' : '' }}>Igbo designs</option>
+                        <option value="yoruba_designs"
+                            {{ request()->input('category') == 'yoruba_designs' ? 'selected' : '' }}>Yoruba designs
+                        </option>
+                        <option value="hausa_designs"
+                            {{ request()->input('category') == 'hausa_designs' ? 'selected' : '' }}>Hausa designs
+                        </option>
+                        <option value="edo_designs"
+                            {{ request()->input('category') == 'edo_designs' ? 'selected' : '' }}>Edo designs</option>
+                        <option value="odugwu_2pcs"
+                            {{ request()->input('category') == 'odugwu_2pcs' ? 'selected' : '' }}>Odugwu 2pcs Wears
+                        </option>
+                        <option value="men_bespoke"
+                            {{ request()->input('category') == 'men_bespoke' ? 'selected' : '' }}>Men bespoke designs
+                        </option>
+                        <option value="women_bespoke"
+                            {{ request()->input('category') == 'women_bespoke' ? 'selected' : '' }}>Women bespoke
+                            designs</option>
+                        <option value="celebrities"
+                            {{ request()->input('category') == 'celebrities' ? 'selected' : '' }}>Celebrities Wears
+                        </option>
+                        <option value="boss_wears"
+                            {{ request()->input('category') == 'boss_wears' ? 'selected' : '' }}>The Boss Wears (C.E.O
+                            and MD's)</option>
+                        <option value="oga_luxury"
+                            {{ request()->input('category') == 'oga_luxury' ? 'selected' : '' }}>OGA Luxury</option>
+                        <option value="wedding" {{ request()->input('category') == 'wedding' ? 'selected' : '' }}>
+                            Wedding Wears</option>
+                        <option value="queens" {{ request()->input('category') == 'queens' ? 'selected' : '' }}>Luxury
+                            Queens Wears</option>
+                        <option value="anniversaries"
+                            {{ request()->input('category') == 'anniversaries' ? 'selected' : '' }}>Anniversaries Wears
+                        </option>
+                        <option value="special_occasions"
+                            {{ request()->input('category') == 'special_occasions' ? 'selected' : '' }}>Special
+                            occasions Wears</option>
+                        <option value="shoes" {{ request()->input('category') == 'shoes' ? 'selected' : '' }}>Hand
+                            made shoes</option>
+                    </select>
 
-                            <div
-                                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <!-- Add to Cart Form -->
-                                <form action="{{ route('cart.add', $product) }}" method="POST">
-                                    @csrf
-                                    <button type="submit"
-                                        style="display: flex; align-items: center; background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background-color 0.3s;">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            style="height: 20px; width: 20px; margin-right: 8px;" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 3h2l.4 2M7 13h10l1.4-8H5.2L7 13zm0 0l1 5h8l1-5M5 13H4a1 1 0 100 2h1m14-2h1a1 1 0 100 2h-1" />
-                                        </svg>
-                                        Add to Cart
-                                    </button>
-                                </form>
+                    <!-- Price Filter -->
+                    <input name="min_price" type="number" placeholder="Min Price"
+                        value="{{ request()->input('min_price') }}"
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; flex: 1 1 100px; min-width: 100px;">
+                    <input name="max_price" type="number" placeholder="Max Price"
+                        value="{{ request()->input('max_price') }}"
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; flex: 1 1 100px; min-width: 100px;">
 
-                                <!-- Add to Wishlist Form -->
-                                <form action="{{ route('wishlist.add', $product) }}" method="POST">
-                                    @csrf
-                                    <button type="submit"
-                                        style="background-color: transparent; border: none; color: #EE2761; cursor: pointer;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" style="height: 24px; width: 24px;"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4.318 6.318a4.5 4.5 0 016.364 0l.318.318.318-.318a4.5 4.5 0 016.364 6.364l-6.682 6.682a1 1 0 01-1.414 0L4.318 12.682a4.5 4.5 0 010-6.364z" />
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-
-                            <a href="{{ route('shop.show', $product) }}"
-                                style="display: block; text-align: center; background-color: #EE2761; color: white; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background-color 0.3s;">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        style="background-color: #EE2761; color: white; padding: 8px 16px; border-radius: 5px; border: none; flex: 1 1 100px; min-width: 100px;">
+                        Filter
+                    </button>
+                </form>
             </div>
 
-            <!-- Pagination Section -->
-            <div style="margin-top: 32px; text-align: center;">
-                @if ($products->lastPage() > 1)
-                    <ul style="list-style-type: none; padding: 0; display: inline-flex; gap: 8px;">
-                        <!-- Previous Page Link -->
-                        @if ($products->onFirstPage())
-                            <li style="color: grey;">&laquo;</li>
-                        @else
-                            <li>
-                                <a href="{{ $products->previousPageUrl() }}"
-                                    style="color: #EE2761; text-decoration: none;">&laquo;</a>
-                            </li>
-                        @endif
 
-                        <!-- Page Numbers -->
-                        @for ($i = 1; $i <= $products->lastPage(); $i++)
-                            <li>
-                                <a href="{{ $products->url($i) }}"
-                                    style="padding: 8px 12px; background-color: {{ $products->currentPage() == $i ? '#EE2761' : '#f0f0f0' }}; color: {{ $products->currentPage() == $i ? 'white' : 'black' }}; border-radius: 5px; text-decoration: none;">
-                                    {{ $i }}
+            <!-- Display Products or No Results Message -->
+            @if ($products->isEmpty())
+                <p style="text-align: center; font-size: 1.25rem; color: #888;">No products found.</p>
+            @else
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+                    @foreach ($products as $product)
+                        <div
+                            style="background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                            @if ($product->images->isNotEmpty())
+                                <img src="{{ Storage::url($product->images->first()->url) }}"
+                                    alt="{{ $product->name }}"
+                                    style="width: 100%; height: 280px; object-fit: cover;">
+                            @else
+                                <div
+                                    style="width: 100%; height: 280px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                    No Image
+                                </div>
+                            @endif
+
+                            <div style="padding: 16px;">
+                                <h2 style="font-size: 1.75rem; font-weight: bold; margin-bottom: 8px; color: black;">
+                                    {{ $product->name }}</h2>
+                                <p style="color: #888888; margin-bottom: 8px;">
+                                    {{ Str::limit($product->description, 100) }}</p>
+                                <p style="font-size: 1.25rem; font-weight: bold; color: #EE2761; margin-bottom: 16px;">
+                                    KES {{ number_format($product->price, 2) }}</p>
+
+                                <div
+                                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                    <!-- Add to Cart Form -->
+                                    <form action="{{ route('cart.add', $product) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            style="display: flex; align-items: center; background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background-color 0.3s;">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                style="height: 20px; width: 20px; margin-right: 8px;" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 3h2l.4 2M7 13h10l1.4-8H5.2L7 13zm0 0l1 5h8l1-5M5 13H4a1 1 0 100 2h1m14-2h1a1 1 0 100 2h-1" />
+                                            </svg>
+                                            Add to Cart
+                                        </button>
+                                    </form>
+
+                                    <!-- Add to Wishlist Form -->
+                                    <form action="{{ route('wishlist.add', $product) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            style="background-color: transparent; border: none; color: #EE2761; cursor: pointer;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="height: 24px; width: 24px;"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4.318 6.318a4.5 4.5 0 016.364 0l.318.318.318-.318a4.5 4.5 0 016.364 6.364l-6.682 6.682a1 1 0 01-1.414 0L4.318 12.682a4.5 4.5 0 010-6.364z" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <a href="{{ route('shop.show', $product) }}"
+                                    style="display: block; text-align: center; background-color: #EE2761; color: white; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background-color 0.3s;">
+                                    View Details
                                 </a>
-                            </li>
-                        @endfor
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
 
-                        <!-- Next Page Link -->
-                        @if ($products->hasMorePages())
-                            <li>
-                                <a href="{{ $products->nextPageUrl() }}"
-                                    style="color: #EE2761; text-decoration: none;">&raquo;</a>
-                            </li>
-                        @else
-                            <li style="color: grey;">&raquo;</li>
-                        @endif
-                    </ul>
-                @endif
-            </div>
+                <!-- Pagination Section -->
+                <div style="margin-top: 32px; text-align: center;">
+                    @if ($products->lastPage() > 1)
+                        <ul style="list-style-type: none; padding: 0; display: inline-flex; gap: 8px;">
+                            <!-- Previous Page Link -->
+                            @if ($products->onFirstPage())
+                                <li style="color: grey;">&laquo;</li>
+                            @else
+                                <li>
+                                    <a href="{{ $products->previousPageUrl() }}"
+                                        style="color: #EE2761; text-decoration: none;">&laquo;</a>
+                                </li>
+                            @endif
+
+                            <!-- Page Numbers -->
+                            @for ($i = 1; $i <= $products->lastPage(); $i++)
+                                <li>
+                                    <a href="{{ $products->url($i) }}"
+                                        style="padding: 8px 12px; background-color: {{ $products->currentPage() == $i ? '#EE2761' : '#f0f0f0' }}; color: {{ $products->currentPage() == $i ? 'white' : 'black' }}; border-radius: 5px; text-decoration: none;">
+                                        {{ $i }}
+                                    </a>
+                                </li>
+                            @endfor
+
+                            <!-- Next Page Link -->
+                            @if ($products->hasMorePages())
+                                <li>
+                                    <a href="{{ $products->nextPageUrl() }}"
+                                        style="color: #EE2761; text-decoration: none;">&raquo;</a>
+                                </li>
+                            @else
+                                <li style="color: grey;">&raquo;</li>
+                            @endif
+                        </ul>
+                    @endif
+                </div>
+            @endif
         </div>
         <!-- End shop section -->
+
 
 
         <!-- Start shipping section -->

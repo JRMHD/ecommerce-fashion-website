@@ -6,7 +6,6 @@ use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -23,7 +22,12 @@ class CartController extends Controller
             $cartItems = session()->get('cart', []);
         }
 
-        return view('cart', compact('cartItems'));
+        // Calculate total price of the cart items
+        $total = $cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
+
+        return view('cart', compact('cartItems', 'total'));
     }
 
     // Function to add a product to the cart
@@ -63,20 +67,19 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 
-
     // Function to remove a product from the cart
-    public function removeFromCart(Product $product)
+    public function removeFromCart($cartItemId)
     {
         if (Auth::check()) {
-            // For logged-in users, remove the product from the database cart
-            CartItem::where('user_id', Auth::id())
-                ->where('product_id', $product->id)
+            // For logged-in users, remove the product from the database cart using the cart item ID
+            CartItem::where('id', $cartItemId)
+                ->where('user_id', Auth::id())
                 ->delete();
         } else {
             // For guests, remove the product from the session cart
             $cart = session()->get('cart', []);
-            if (isset($cart[$product->id])) {
-                unset($cart[$product->id]);
+            if (isset($cart[$cartItemId])) {
+                unset($cart[$cartItemId]);
                 session()->put('cart', $cart);
             }
         }
@@ -84,21 +87,40 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product removed from cart!');
     }
 
-
-    public function checkout()
+    // Function to update cart item quantities (increment/decrement)
+    public function updateCart(Request $request, $cartItemId)
     {
+        $action = $request->input('action'); // Can be 'increment' or 'decrement'
+
         if (Auth::check()) {
-            // For logged-in users, you might want to show a checkout page or process payment
-            // Fetch user details, etc.
+            // For logged-in users, update the cart in the database
+            $cartItem = CartItem::where('id', $cartItemId)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if ($cartItem) {
+                if ($action == 'increment') {
+                    $cartItem->increment('quantity');
+                } elseif ($action == 'decrement' && $cartItem->quantity > 1) {
+                    $cartItem->decrement('quantity');
+                }
+                $cartItem->save();
+            }
         } else {
-            // For guests, redirect to login or guest checkout page
-            return redirect()->route('login')->with('info', 'Please log in to proceed with checkout.');
+            // For guests, update the session cart
+            $cart = session()->get('cart', []);
+            if (isset($cart[$cartItemId])) {
+                if ($action == 'increment') {
+                    $cart[$cartItemId]['quantity']++;
+                } elseif ($action == 'decrement' && $cart[$cartItemId]['quantity'] > 1) {
+                    $cart[$cartItemId]['quantity']--;
+                }
+                session()->put('cart', $cart);
+            }
         }
 
-        return view('checkout');
+        return redirect()->back()->with('success', 'Cart updated!');
     }
-
-
 
     // Function to clear the entire cart
     public function clearCart()
@@ -114,25 +136,17 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Cart cleared!');
     }
 
-    // Function to update cart item quantities
-    public function updateCart(Request $request, Product $product)
+    // Function to handle checkout process
+    public function checkout()
     {
-        $quantity = $request->input('quantity');
-
         if (Auth::check()) {
-            // For logged-in users, update the cart in the database
-            CartItem::where('user_id', Auth::id())
-                ->where('product_id', $product->id)
-                ->update(['quantity' => $quantity]);
+            // For logged-in users, you might want to show a checkout page or process payment
+            // Fetch user details, etc.
         } else {
-            // For guests, update the session cart
-            $cart = session()->get('cart', []);
-            if (isset($cart[$product->id])) {
-                $cart[$product->id]['quantity'] = $quantity;
-                session()->put('cart', $cart);
-            }
+            // For guests, redirect to login or guest checkout page
+            return redirect()->route('login')->with('info', 'Please log in to proceed with checkout.');
         }
 
-        return redirect()->back()->with('success', 'Cart updated!');
+        return view('checkout');
     }
 }

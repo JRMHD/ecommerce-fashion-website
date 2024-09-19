@@ -126,7 +126,7 @@
                             <!-- Removed Dashboard link -->
                             <li class="account__menu--list"><a href="{{ route('profile.edit') }}">Edit Profile</a></li>
                             <li class="account__menu--list"><a href="{{ url('addresses') }}">Addresses</a></li>
-                            <li class="account__menu--list"><a href="{{ route('wishlist') }}">Wishlist</a></li>
+                            <li class="account__menu--list"><a href="{{ url('wishlist') }}">Wishlist</a></li>
                             <li class="account__menu--list">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
