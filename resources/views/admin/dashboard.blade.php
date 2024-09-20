@@ -1,62 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.admin')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oga Clothing Africa - Admin Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#EE2761',
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-
-<body class="bg-gray-100">
-    <header class="bg-white shadow">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Oga Clothing Africa - Admin Dashboard</h1>
-                <p class="mt-1 text-sm text-gray-600">Welcome back, <span id="adminName"
-                        class="font-semibold">Admin</span>!</p>
+@section('content')
+    <div class="container mx-auto px-4 sm:px-8 py-8">
+        <!-- Dashboard Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center">
+                <img src="{{ asset('assets/img/logo/nav-log.png') }}" alt="Oga Clothing Africa" class="h-12 w-auto">
+                <h1 class="ml-4 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
             </div>
-            <img src="/assets/img/logo/nav-log.png" alt="Oga Clothing Africa Logo" class="h-12 w-auto">
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
-            <div class="border-4 border-dashed border-gray-200 rounded-lg h-96 p-4">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Welcome to the admin dashboard!</h2>
-                <p class="text-gray-600">Here you can manage products, view orders, and update site content.</p>
-
-                <!-- Management Buttons -->
-                <div class="mt-6">
-                    <a href="{{ route('admin.products.index') }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        View Products
-                    </a>
-                    <a href="{{ route('admin.products.create') }}"
-                        class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Add New Product
-                    </a>
-                </div>
-                <!-- End Management Buttons -->
+            <div class="text-right">
+                <p class="text-gray-500">Welcome back, <span class="font-semibold text-black">Mike!</span></p>
+                <p class="text-gray-400 text-sm">Today is <span
+                        class="font-semibold">{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</span></p>
             </div>
         </div>
-    </main>
 
-    <script>
-        // You can dynamically set the admin's name here
-        document.getElementById('adminName').textContent = 'John Doe'; // Replace with actual admin name
-    </script>
-</body>
+        <!-- Welcome Section -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Welcome to the Admin Dashboard!</h2>
+            <p class="text-gray-600">Here you can manage products, view orders, and update site content.</p>
+        </div>
 
-</html>
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <!-- View Products Button -->
+            <div class="bg-gray-100 hover:bg-gray-200 transition rounded-lg shadow-lg p-6 text-center">
+                <a href="{{ route('admin.products.index') }}" class="text-xl font-semibold text-black">
+                    <div class="flex justify-center items-center mb-4">
+                        <svg class="w-12 h-12 text-#EE2761" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3v18h18V3H3zm3 3h12v12H6V6z"></path>
+                        </svg>
+                    </div>
+                    View Products
+                </a>
+            </div>
+
+            <!-- Add New Product Button -->
+            <div class="bg-gray-100 hover:bg-gray-200 transition rounded-lg shadow-lg p-6 text-center">
+                <a href="{{ route('admin.products.create') }}" class="text-xl font-semibold text-black">
+                    <div class="flex justify-center items-center mb-4">
+                        <svg class="w-12 h-12 text-#EE2761" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    Add New Product
+                </a>
+            </div>
+
+            <!-- Manage Orders Button -->
+            <div class="bg-gray-100 hover:bg-gray-200 transition rounded-lg shadow-lg p-6 text-center">
+                <a href="{{ route('admin.orders.index') }}" class="text-xl font-semibold text-black">
+                    <div class="flex justify-center items-center mb-4">
+                        <svg class="w-12 h-12 text-#EE2761" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    Manage Orders
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer with Auto-Updating Year -->
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            <p>&copy; <span id="year">{{ \Carbon\Carbon::now()->format('Y') }}</span> Oga Clothing Africa. All rights
+                reserved.</p>
+        </footer>
+    </div>
+@endsection

@@ -11,6 +11,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+// use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\OrderController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -119,7 +124,7 @@ Route::middleware(['auth', 'admin'])->group(function () {});
 Route::prefix('admin')->group(function () {
     Route::get('products', [AdminProductController::class, 'index'])->name('admin.products.index');
     Route::get('products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+   
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
@@ -129,7 +134,7 @@ Route::prefix('admin')->group(function () {
     // Add more routes as needed
 });
 Route::get('/product/{product}', [ShopController::class, 'show'])->name('products.show');
-
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
 Route::middleware('auth')->group(function () {
     // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
@@ -160,5 +165,21 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 
 Route::middleware('auth')->group(function () {
     Route::resource('addresses', AddressController::class)->except(['show']);
-    
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout', [CartController::class, 'placeOrder'])->name('cart.placeOrder');
+
+    Route::get('/my-account/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/my-account/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+
+    // Admin routes
+    Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::post('/admin/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+});
+Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::get('/my-account', [CartController::class, 'myAccount'])->name('my-account');
+Route::get('/orders/{order}', [OrderController::class, 'detailOrder'])->name('orders.detail');

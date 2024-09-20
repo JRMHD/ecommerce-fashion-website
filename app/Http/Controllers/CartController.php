@@ -4,11 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+
+    public function myAccount()
+    {
+        // Fetch orders for the logged-in user
+        $orders = Order::where('user_id', Auth::id())->get();
+
+        // Pass the orders to the view
+        return view('my-account', compact('orders'));
+    }
+
     // Method to show the cart page
     public function showCart()
     {
@@ -137,16 +149,68 @@ class CartController extends Controller
     }
 
     // Function to handle checkout process
-    public function checkout()
+    public function checkout(Request $request)
     {
         if (Auth::check()) {
-            // For logged-in users, you might want to show a checkout page or process payment
-            // Fetch user details, etc.
+            $user = Auth::user();
+            $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
+
+            // Calculate total price
+            $totalPrice = $cartItems->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
+
+            // Fetch user addresses for selection during checkout
+            $addresses = $user->addresses;
+
+            return view('checkout', compact('cartItems', 'totalPrice', 'addresses'));
         } else {
-            // For guests, redirect to login or guest checkout page
             return redirect()->route('login')->with('info', 'Please log in to proceed with checkout.');
         }
+    }
 
-        return view('checkout');
+    public function placeOrder(Request $request)
+    {
+        $user = Auth::user();
+        $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        // Validate selected address and payment method
+        $request->validate([
+            'address_id' => 'required|exists:addresses,id',
+            'payment_method' => 'required|string|in:mpesa,paypal,card'
+        ]);
+
+        // Calculate total price
+        $totalPrice = $cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
+
+        // Create the order
+        $order = Order::create([
+            'user_id' => $user->id,
+            'address_id' => $request->address_id,
+            'total_price' => $totalPrice,
+            'payment_method' => $request->payment_method,
+            'status' => 'pending'
+        ]);
+
+        // Create order items
+        foreach ($cartItems as $cartItem) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product_id,
+                'quantity' => $cartItem->quantity,
+                'price' => $cartItem->product->price,
+            ]);
+        }
+
+        // Clear the cart
+        CartItem::where('user_id', $user->id)->delete();
+
+        return redirect()->route('my-account')->with('success', 'Order placed successfully!');
     }
 }

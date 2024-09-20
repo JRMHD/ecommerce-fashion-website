@@ -165,15 +165,20 @@
                         </svg>
                         Continue Shopping
                     </a>
-                    <a href="{{ route('checkout') }}"
-                        class="w-full bg-brand text-white py-3 px-6 rounded-md hover:bg-red-700 transition duration-150 ease-in-out flex items-center justify-center">
-                        Proceed to Checkout
-                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </a>
+
+                    <!-- Proceed to Checkout Button -->
+                    <form method="POST" action="{{ route('cart.checkout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full bg-brand text-white py-3 px-6 rounded-md hover:bg-red-700 transition duration-150 ease-in-out flex items-center justify-center">
+                            Proceed to Checkout
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
         @else

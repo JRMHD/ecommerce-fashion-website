@@ -101,7 +101,7 @@
                         <li class="header__account--items header__account2--items">
                             @if (Auth::check())
                                 <!-- User is logged in -->
-                                <a class="header__account--btn account-logged-in" href="{{ route('my-account') }}">
+                                <a class="header__account--btn account-logged-in" href="{{ url('my-account') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                         viewBox="0 0 512 512">
                                         <path
@@ -304,7 +304,7 @@
                         <li class="header__account--items header__account2--items">
                             @if (Auth::check())
                                 <!-- User is logged in -->
-                                <a class="header__account--btn account-logged-in" href="{{ route('my-account') }}">
+                                <a class="header__account--btn account-logged-in" href="{{ url('my-account') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                         viewBox="0 0 512 512">
                                         <path

@@ -153,37 +153,35 @@
                                     Profile</a>
                             </div>
 
-                            <!-- Orders History -->
-                            <h2 class="account__content--title h3 mb-20">Order History</h2>
-                            <div class="account__table--area">
-                                <table class="account__table">
-                                    <thead class="account__table--header">
-                                        <tr class="account__table--header__child">
-                                            <th class="account__table--header__child--items">Order</th>
-                                            <th class="account__table--header__child--items">Date</th>
-                                            <th class="account__table--header__child--items">Payment Status</th>
-                                            <th class="account__table--header__child--items">Fulfillment Status</th>
-                                            <th class="account__table--header__child--items">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="account__table--body">
-                                        <tr class="account__table--body__child">
-                                            <td class="account__table--body__child--items">#2014</td>
-                                            <td class="account__table--body__child--items">February 06, 2022</td>
-                                            <td class="account__table--body__child--items">Paid</td>
-                                            <td class="account__table--body__child--items">Unfulfilled</td>
-                                            <td class="account__table--body__child--items">$40.00 USD</td>
-                                        </tr>
-                                        <tr class="account__table--body__child">
-                                            <td class="account__table--body__child--items">#4566</td>
-                                            <td class="account__table--body__child--items">February 06, 2022</td>
-                                            <td class="account__table--body__child--items">Paid</td>
-                                            <td class="account__table--body__child--items">Unfulfilled</td>
-                                            <td class="account__table--body__child--items">$87.00 USD</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div
+                                style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+                                <h2
+                                    style="color: #333; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #EE2761; padding-bottom: 10px;">
+                                    My Orders</h2>
+                                <div>
+                                    @forelse ($orders as $order)
+                                        <div
+                                            style="background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <h3 style="color: #EE2761; font-size: 18px; margin-bottom: 10px;">Order
+                                                #{{ $order->id }}</h3>
+                                            <p style="margin: 5px 0; color: #555;">Status: <span
+                                                    style="font-weight: bold; color: #333;">{{ $order->status }}</span>
+                                            </p>
+                                            <p style="margin: 5px 0; color: #555;">Total: <span
+                                                    style="font-weight: bold; color: #EE2761;">KES
+                                                    {{ number_format($order->total_price, 2) }}</span></p>
+                                            <a href="{{ route('orders.detail', $order->id) }}"
+                                                style="display: inline-block; margin-top: 10px; padding: 8px 15px; background-color: #EE2761; color: white; text-decoration: none; border-radius: 5px; transition: background-color 0.3s;">View
+                                                Order Details</a>
+                                        </div>
+                                    @empty
+                                        <p
+                                            style="text-align: center; color: #777; font-style: italic; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+                                            You have no orders yet.</p>
+                                    @endforelse
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -265,7 +263,5 @@
     <script src="assets/js/script.js"></script>
 
 </body>
-
-<!-- Mirrored from risingtheme.com/html/demo-suruchi-v1/suruchi/my-account by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Sep 2024 14:33:32 GMT -->
 
 </html>

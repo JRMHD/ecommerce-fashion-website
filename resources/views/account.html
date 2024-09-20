@@ -1,0 +1,19 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="container">
+        <h2>My Orders</h2>
+
+        @forelse ($orders as $order)
+            <div class="order">
+                <h3>Order #{{ $order->id }}</h3>
+                <p>Status: {{ $order->status }}</p>
+                <p>Total: KES {{ number_format($order->total_price, 2) }}</p>
+                <a href="{{ route('orders.detail', $order->id) }}">View Order Details</a>
+
+            </div>
+        @empty
+            <p>You have no orders yet.</p>
+        @endforelse
+    </div>
+@endsection
