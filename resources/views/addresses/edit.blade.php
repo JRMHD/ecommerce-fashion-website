@@ -105,7 +105,7 @@
                     required>
             </div>
             <div class="form-group">
-                <label for="address_line_2">Address Line 2:</label>
+                <label for="address_line_2">Phone Number:</label>
                 <input type="text" id="address_line_2" name="address_line_2" value="{{ $address->address_line_2 }}">
             </div>
             <div class="form-group">

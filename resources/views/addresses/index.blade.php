@@ -132,7 +132,8 @@
         <ul class="address-list">
             @foreach ($addresses as $address)
                 <li class="address-card">
-                    <div class="address-content">{{ $address->address_line_1 }}, {{ $address->city }},
+                    <div class="address-content">{{ $address->address_line_1 }},{{ $address->address_line_2 }},
+                        {{ $address->city }},
                         {{ $address->state }}, {{ $address->postal_code }}</div>
                     <div class="address-actions">
                         <a href="{{ route('addresses.edit', $address->id) }}" class="btn btn-secondary">Edit</a>
