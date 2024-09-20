@@ -151,16 +151,16 @@
                                 Add to Cart
                             </button>
                         </form>
-                        <button
+                        <a href="{{ route('cart.show') }}"
                             class="flex-1 bg-gray-900 text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            Proceed to Checkout
-                        </button>
+                            View Cart
+                        </a>
+
                     </div>
                     <div class="mb-8">
                         <h2 class="text-lg font-semibold text-gray-900 mb-2">Custom Measurements</h2>

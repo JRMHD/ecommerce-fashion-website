@@ -185,7 +185,7 @@
                     </path>
                 </svg>
                 <p class="text-xl text-gray-600 mb-6">Your cart is empty.</p>
-                <a href="{{ route('shop') }}"
+                <a href="{{ url('shop') }}"
                     class="bg-brand text-white py-3 px-6 rounded-md hover:bg-red-700 transition duration-150 ease-in-out inline-flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
