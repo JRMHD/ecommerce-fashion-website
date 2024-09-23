@@ -116,7 +116,18 @@
                     Hello, <span style="color: #EE2761;">{{ Auth::user()->name }}</span>!
                     Welcome to your account.
                 </p>
-
+                <!-- Display Success and Error Messages -->
+                @if (session('success'))
+                    <div
+                        style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                        {{ session('success') }}
+                    </div>
+                @elseif (session('error'))
+                    <div
+                        style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <!-- Account section inner layout -->
                 <div class="my__account--section__inner border-radius-10 d-flex">
                     <!-- Left sidebar with profile links -->

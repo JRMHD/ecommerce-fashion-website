@@ -8,33 +8,25 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class CartController extends Controller
 {
-
     public function myAccount()
     {
-        // Fetch orders for the logged-in user
         $orders = Order::where('user_id', Auth::id())->get();
-
-        // Pass the orders to the view
         return view('my-account', compact('orders'));
     }
 
-    // Method to show the cart page
     public function showCart()
     {
         if (Auth::check()) {
-            // Fetch the cart for logged-in user from the database
-            $cartItems = CartItem::with('product')
-                ->where('user_id', Auth::id())
-                ->get();
+            $cartItems = CartItem::with('product')->where('user_id', Auth::id())->get();
         } else {
-            // Fetch the cart for guests from the session
             $cartItems = session()->get('cart', []);
         }
 
-        // Calculate total price of the cart items
         $total = $cartItems->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
@@ -42,17 +34,13 @@ class CartController extends Controller
         return view('cart', compact('cartItems', 'total'));
     }
 
-    // Function to add a product to the cart
     public function addToCart(Product $product)
     {
         if (Auth::check()) {
-            // For logged-in users, add or update the product in the database cart
-            $cartItem = CartItem::where('user_id', Auth::id())
-                ->where('product_id', $product->id)
-                ->first();
+            $cartItem = CartItem::where('user_id', Auth::id())->where('product_id', $product->id)->first();
 
             if ($cartItem) {
-                $cartItem->increment('quantity'); // Increase quantity by 1
+                $cartItem->increment('quantity');
             } else {
                 CartItem::create([
                     'user_id' => Auth::id(),
@@ -61,7 +49,6 @@ class CartController extends Controller
                 ]);
             }
         } else {
-            // For guests, store the cart in session
             $cart = session()->get('cart', []);
             if (isset($cart[$product->id])) {
                 $cart[$product->id]['quantity']++;
@@ -79,16 +66,11 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 
-    // Function to remove a product from the cart
     public function removeFromCart($cartItemId)
     {
         if (Auth::check()) {
-            // For logged-in users, remove the product from the database cart using the cart item ID
-            CartItem::where('id', $cartItemId)
-                ->where('user_id', Auth::id())
-                ->delete();
+            CartItem::where('id', $cartItemId)->where('user_id', Auth::id())->delete();
         } else {
-            // For guests, remove the product from the session cart
             $cart = session()->get('cart', []);
             if (isset($cart[$cartItemId])) {
                 unset($cart[$cartItemId]);
@@ -99,16 +81,12 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product removed from cart!');
     }
 
-    // Function to update cart item quantities (increment/decrement)
     public function updateCart(Request $request, $cartItemId)
     {
-        $action = $request->input('action'); // Can be 'increment' or 'decrement'
+        $action = $request->input('action');
 
         if (Auth::check()) {
-            // For logged-in users, update the cart in the database
-            $cartItem = CartItem::where('id', $cartItemId)
-                ->where('user_id', Auth::id())
-                ->first();
+            $cartItem = CartItem::where('id', $cartItemId)->where('user_id', Auth::id())->first();
 
             if ($cartItem) {
                 if ($action == 'increment') {
@@ -119,7 +97,6 @@ class CartController extends Controller
                 $cartItem->save();
             }
         } else {
-            // For guests, update the session cart
             $cart = session()->get('cart', []);
             if (isset($cart[$cartItemId])) {
                 if ($action == 'increment') {
@@ -134,33 +111,25 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Cart updated!');
     }
 
-    // Function to clear the entire cart
     public function clearCart()
     {
         if (Auth::check()) {
-            // For logged-in users, clear the entire database cart
             CartItem::where('user_id', Auth::id())->delete();
         } else {
-            // For guests, clear the session cart
             session()->forget('cart');
         }
 
         return redirect()->back()->with('success', 'Cart cleared!');
     }
 
-    // Function to handle checkout process
     public function checkout(Request $request)
     {
         if (Auth::check()) {
             $user = Auth::user();
             $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
-
-            // Calculate total price
             $totalPrice = $cartItems->sum(function ($item) {
                 return $item->product->price * $item->quantity;
             });
-
-            // Fetch user addresses for selection during checkout
             $addresses = $user->addresses;
 
             return view('checkout', compact('cartItems', 'totalPrice', 'addresses'));
@@ -178,18 +147,15 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
 
-        // Validate selected address and payment method
         $request->validate([
             'address_id' => 'required|exists:addresses,id',
             'payment_method' => 'required|string|in:mpesa,paypal,card'
         ]);
 
-        // Calculate total price
         $totalPrice = $cartItems->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
 
-        // Create the order
         $order = Order::create([
             'user_id' => $user->id,
             'address_id' => $request->address_id,
@@ -198,7 +164,6 @@ class CartController extends Controller
             'status' => 'pending'
         ]);
 
-        // Create order items
         foreach ($cartItems as $cartItem) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -208,9 +173,47 @@ class CartController extends Controller
             ]);
         }
 
-        // Clear the cart
         CartItem::where('user_id', $user->id)->delete();
 
+        // Send SMS alert
+        $productNames = $cartItems->pluck('product.name')->implode(', ');
+        $message = "Hello Mike,\nNew order placed!\nProducts: {$productNames}\nTotal Amount Paid: KSh {$totalPrice}\n\nThank you for your business!\nOga Clothing Africa";
+        $phoneNumbers = ['0706378245', '0735494584', '0793977600'];
+
+        foreach ($phoneNumbers as $phoneNumber) {
+            $this->sendSMS($phoneNumber, $message);
+        }
+
         return redirect()->route('my-account')->with('success', 'Order placed successfully!');
+    }
+
+    private function sendSMS($phoneNumber, $message)
+    {
+        $appKey = env('SMS_APP_KEY');
+        $appToken = env('SMS_APP_TOKEN');
+        $apiUrl = 'https://sms.textsms.co.ke/api/services/sendsms/';
+        $shortcode = 'TextSMS';
+
+        try {
+            $response = Http::post($apiUrl, [
+                'apikey' => $appKey,
+                'partnerID' => $appToken,
+                'message' => $message,
+                'shortcode' => $shortcode,
+                'mobile' => $phoneNumber,
+            ]);
+
+            if ($response->failed()) {
+                Log::error('Failed to send SMS', [
+                    'phone_number' => $phoneNumber,
+                    'error' => $response->body(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception occurred while sending SMS', [
+                'phone_number' => $phoneNumber,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
