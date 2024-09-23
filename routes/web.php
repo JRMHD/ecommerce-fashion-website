@@ -124,7 +124,7 @@ Route::middleware(['auth', 'admin'])->group(function () {});
 Route::prefix('admin')->group(function () {
     Route::get('products', [AdminProductController::class, 'index'])->name('admin.products.index');
     Route::get('products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
-   
+
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
@@ -183,3 +183,4 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::get('/my-account', [CartController::class, 'myAccount'])->name('my-account');
 Route::get('/orders/{order}', [OrderController::class, 'detailOrder'])->name('orders.detail');
+Route::get('/cart/shipping-fee/{addressId}', [CartController::class, 'getShippingFeeAjax']);

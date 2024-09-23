@@ -134,7 +134,7 @@
                                         <span class="visually-hidden">Login</span>
                                         <span class="account-text">Login</span>
                                     </a>
-                                    <a class="header__account--btn account-create" href="{{ route('register') }}">
+                                    {{-- <a class="header__account--btn account-create" href="{{ route('register') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                             viewBox="0 0 512 512">
                                             <path
@@ -146,9 +146,9 @@
                                                 fill="none" stroke="currentColor" stroke-miterlimit="10"
                                                 stroke-width="32" />
                                         </svg>
-                                        <span class="visually-hidden">Create Account</span>
-                                        <span class="account-text">Create Account</span>
-                                    </a>
+                                        <span class="visually-hidden">Sign Up</span>
+                                        <span class="account-text">Sign Up</span>
+                                    </a> --}}
                                 </div>
                             @endif
                         </li>
@@ -252,7 +252,7 @@
                                     </g>
                                 </svg>
                                 <span class="header__account--btn__text">My cart</span>
-                                <span class="items__count">{{ $cartCount }} items</span>
+                                <span class="items__count">{{ $cartCount }}</span>
                             </a>
                         </li>
 
@@ -337,7 +337,7 @@
                                         <span class="visually-hidden">Login</span>
                                         <span class="account-text">Login</span>
                                     </a>
-                                    <a class="header__account--btn account-create" href="{{ route('register') }}">
+                                    {{-- <a class="header__account--btn account-create" href="{{ route('register') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443"
                                             viewBox="0 0 512 512">
                                             <path
@@ -349,9 +349,9 @@
                                                 fill="none" stroke="currentColor" stroke-miterlimit="10"
                                                 stroke-width="32" />
                                         </svg>
-                                        <span class="visually-hidden">Create Account</span>
-                                        <span class="account-text">Create Account</span>
-                                    </a>
+                                        <span class="visually-hidden">Sign Up</span>
+                                        <span class="account-text">Sign Up</span>
+                                    </a> --}}
                                 </div>
                             @endif
                         </li>
@@ -387,7 +387,7 @@
                                         </g>
                                     </g>
                                 </svg>
-                                <span class="items__count">{{ $cartCount }} items</span>
+                                <span class="items__count">{{ $cartCount }}</span>
                             </a>
                         </li>
                     </ul>
@@ -511,7 +511,7 @@
                         </svg>
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">Cart</span>
-                    <span class="items__count">{{ $cartCount }} items</span>
+                    <span class="items__count">{{ $cartCount }}</span>
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list">

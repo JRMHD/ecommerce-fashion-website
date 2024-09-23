@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -127,12 +128,17 @@ class CartController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
-            $totalPrice = $cartItems->sum(function ($item) {
+            $subtotal = $cartItems->sum(function ($item) {
                 return $item->product->price * $item->quantity;
             });
             $addresses = $user->addresses;
 
-            return view('checkout', compact('cartItems', 'totalPrice', 'addresses'));
+            // Determine shipping fee based on the selected address
+            $shippingFee = $this->getShippingFee($addresses->first());
+
+            $totalPrice = $subtotal + ($shippingFee ?? 0);
+
+            return view('checkout', compact('cartItems', 'subtotal', 'shippingFee', 'totalPrice', 'addresses'));
         } else {
             return redirect()->route('login')->with('info', 'Please log in to proceed with checkout.');
         }
@@ -152,13 +158,24 @@ class CartController extends Controller
             'payment_method' => 'required|string|in:mpesa,paypal,card'
         ]);
 
-        $totalPrice = $cartItems->sum(function ($item) {
+        $address = Address::find($request->address_id);
+        $shippingFee = $this->getShippingFee($address);
+
+        if ($shippingFee === null) {
+            return redirect()->route('whatsapp.contact')->with('info', 'For shipping to your location, please contact us via WhatsApp.');
+        }
+
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
+
+        $totalPrice = $subtotal + $shippingFee;
 
         $order = Order::create([
             'user_id' => $user->id,
             'address_id' => $request->address_id,
+            'subtotal' => $subtotal,
+            'shipping_fee' => $shippingFee,
             'total_price' => $totalPrice,
             'payment_method' => $request->payment_method,
             'status' => 'pending'
@@ -176,16 +193,31 @@ class CartController extends Controller
         CartItem::where('user_id', $user->id)->delete();
 
         // Send SMS alert
+        $this->sendOrderNotification($order, $user, $cartItems);
+
+        return redirect()->route('my-account')->with('success', 'Order placed successfully!');
+    }
+
+    private function getShippingFee($address)
+    {
+        if (strtolower($address->city) === 'nairobi') {
+            return 350;
+        } elseif (strtolower($address->country) === 'kenya') {
+            return 450;
+        }
+
+        return null; // For addresses outside Kenya
+    }
+
+    private function sendOrderNotification($order, $user, $cartItems)
+    {
         $productNames = $cartItems->pluck('product.name')->implode(', ');
-        $userName = $user->name; // Get the name of the user who placed the order
-        $message = "Hello Mike,\nNew order placed by {$userName}!\nOrder ID: {$order->id}\nProducts: {$productNames}\nTotal Amount Paid: KSh {$totalPrice}\n\nThank You for Your Patronage,\nOga Clothing Africa";
+        $message = "Hello Mike,\nNew order placed by {$user->name}!\nOrder ID: {$order->id}\nProducts: {$productNames}\nTotal Amount Paid: KSh {$order->total_price}\n\nThank You for Your Patronage,\nOga Clothing Africa";
         $phoneNumbers = ['0706378245', '0735494584', '0793977600'];
 
         foreach ($phoneNumbers as $phoneNumber) {
             $this->sendSMS($phoneNumber, $message);
         }
-
-        return redirect()->route('my-account')->with('success', 'Order placed successfully!');
     }
 
     private function sendSMS($phoneNumber, $message)
@@ -216,5 +248,26 @@ class CartController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+
+    public function getShippingFeeAjax($addressId)
+    {
+        $user = Auth::user();
+        $address = Address::findOrFail($addressId);
+
+        $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
+        $subtotal = $cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
+
+        // Get shipping fee for the selected address
+        $shippingFee = $this->getShippingFee($address);
+        $totalPrice = $subtotal + ($shippingFee ?? 0);
+
+        return response()->json([
+            'shippingFee' => $shippingFee,
+            'totalPrice' => $totalPrice,
+        ]);
     }
 }
