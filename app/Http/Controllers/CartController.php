@@ -177,7 +177,8 @@ class CartController extends Controller
 
         // Send SMS alert
         $productNames = $cartItems->pluck('product.name')->implode(', ');
-        $message = "Hello Mike,\nNew order placed!\nProducts: {$productNames}\nTotal Amount Paid: KSh {$totalPrice}\n\nThank you for your business!\nOga Clothing Africa";
+        $userName = $user->name; // Get the name of the user who placed the order
+        $message = "Hello Mike,\nNew order placed by {$userName}!\nOrder ID: {$order->id}\nProducts: {$productNames}\nTotal Amount Paid: KSh {$totalPrice}\n\nThank You for Your Patronage,\nOga Clothing Africa";
         $phoneNumbers = ['0706378245', '0735494584', '0793977600'];
 
         foreach ($phoneNumbers as $phoneNumber) {
