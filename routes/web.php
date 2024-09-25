@@ -174,13 +174,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/my-account/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/my-account/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/my-account', [CartController::class, 'myAccount'])->name('my-account');
+    Route::get('/orders/{order}', [OrderController::class, 'detailOrder'])->name('orders.detail');
+    Route::get('/cart/shipping-fee/{addressId}', [CartController::class, 'getShippingFeeAjax']);
 
     // Admin routes
     Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::post('/admin/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
-Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::get('/my-account', [CartController::class, 'myAccount'])->name('my-account');
-Route::get('/orders/{order}', [OrderController::class, 'detailOrder'])->name('orders.detail');
-Route::get('/cart/shipping-fee/{addressId}', [CartController::class, 'getShippingFeeAjax']);
