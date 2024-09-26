@@ -6,7 +6,7 @@
                 <div class="header__shipping">
                     <ul class="header__shipping--wrapper d-flex">
                         <li class="header__shipping--text text-white">
-                            Welcome to Ogaclothing Africa Online Store
+                            Welcome to Oga Clothing Africa Online Store
                         </li>
                         <li class="header__shipping--text text-white d-sm-2-none">
                             <img class="header__shipping--text__icon" src="assets/img/icon/bus.png" alt="bus-icon" />
